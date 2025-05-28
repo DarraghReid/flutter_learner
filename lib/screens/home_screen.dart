@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/topic_provider.dart';
 import '../models/topic.dart';
 import 'add_topic_screen.dart';
+import 'topic_detail_screen.dart';
 
 /// The main screen that displays the list of Flutter topics
 /// and allows users to add, edit, or delete topics.
@@ -121,9 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
 
-                  // Tap to view more details (to be implemented later)
+                  // Navigate to topic detail screen on tap
                   onTap: () {
-                    // TODO: View topic details or edit
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                        builder: (context) => TopicDetailScreen(topic: topic),
+                        ),
+                    );
                   },
                 );
               },
