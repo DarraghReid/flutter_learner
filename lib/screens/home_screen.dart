@@ -83,12 +83,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () {
-                          // Placeholder for future edit screen
+                          // Navigate to the AddTopic screen with the topic to edit
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const AddTopicScreen(), // will eventually change to Edit screen
+                                builder: (context) => AddTopicScreen(topicToEdit: topic), 
                             ),
                           );
                         },

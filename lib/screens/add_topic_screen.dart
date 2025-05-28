@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import '../models/topic.dart';
 import '../providers/topic_provider.dart';
 
-/// Screen for adding a new topic.
+/// Screen for adding a new topic or editing an existing one.
 class AddTopicScreen extends StatefulWidget {
-  const AddTopicScreen({super.key});
+  final Topic? topicToEdit;
+
+  const AddTopicScreen({Key? key, this.topicToEdit}) : super(key: key);
 
   @override
   State<AddTopicScreen> createState() => _AddTopicScreenState();
@@ -20,21 +22,40 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
-  /// Handles saving the topic when the form is valid.
-  void _saveTopic() {
-    if (_formKey.currentState!.validate()) {
-      final newTopic = Topic(
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim(),
-        isDone: false,
-        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-      );
-
-      // Add the new topic using the provider.
-      Provider.of<TopicProvider>(context, listen: false).addTopic(newTopic);
-      Navigator.pop(context); // Go back to the home screen
+  // Initialize the state, pre-filling the form if editing an existing topic.
+  @override
+  void initState() {
+    super.initState();
+    if (widget.topicToEdit != null) {
+        _titleController.text = widget.topicToEdit!.title;
+        _descriptionController.text = widget.topicToEdit!.description;
+        _notesController.text = widget.topicToEdit!.notes ?? '';
     }
   }
+
+  // Method to save the topic, either adding a new one or updating an existing one.
+  void _saveTopic() {
+  if (_formKey.currentState!.validate()) {
+    final topic = Topic(
+      id: widget.topicToEdit?.id,
+      title: _titleController.text.trim(),
+      description: _descriptionController.text.trim(),
+      isDone: widget.topicToEdit?.isDone ?? false,
+      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+    );
+
+    final provider = Provider.of<TopicProvider>(context, listen: false);
+
+    if (widget.topicToEdit == null) {
+      provider.addTopic(topic);
+    } else {
+      provider.updateTopic(topic);
+    }
+
+    Navigator.pop(context);
+  }
+}
+
 
   @override
   // Build the UI for adding a new topic
@@ -75,7 +96,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
               // Button to submit the form and add the topic
               ElevatedButton(
                 onPressed: _saveTopic,
-                child: const Text('Add Topic'),
+                child: Text(widget.topicToEdit == null ? 'Add Topic' : 'Save Changes'),
               ),
             ],
           ),
