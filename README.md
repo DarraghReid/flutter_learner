@@ -56,8 +56,8 @@ When attempting to delete a topic, the app prompts for confirmation to prevent a
 
 ---
 
-### ✅ Deletion Snackbar Feedback
-After confirming deletion, a snackbar message appears confirming the topic was removed successfully.
+### ✅ Snackbar Feedback
+After confirming deletion, editing, and adding a topic, a snackbar message appears as confirmation.
 
 ![Deleted Snackbar](assets/deleted_snackbar.png)
 
