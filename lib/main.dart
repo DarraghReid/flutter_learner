@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/topic_provider.dart';
+import 'screens/home_screen.dart';
+
 
 void main() {
   runApp(
@@ -22,10 +24,7 @@ class FlutterLearnerApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Flutter Learner')),
-        body: const Center(child: Text('Let’s get building!')),
-      ),
+      home: const HomeScreen(), // Ensure you have a HomeScreen widget defined
     );
   }
 }
