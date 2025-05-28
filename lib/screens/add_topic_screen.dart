@@ -47,9 +47,17 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
     final provider = Provider.of<TopicProvider>(context, listen: false);
 
     if (widget.topicToEdit == null) {
-      provider.addTopic(topic);
+        // If no topic is being edited, add a new topic
+        provider.addTopic(topic);
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Topic added successfully!')),
+        );
     } else {
-      provider.updateTopic(topic);
+        // If editing an existing topic, update it
+        provider.updateTopic(topic);
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Topic updated successfully!')),
+        );
     }
 
     Navigator.pop(context);

@@ -39,98 +39,106 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: topicProvider.topics.isEmpty
           ? const Center(
-              child: Text('No topics yet. Add one!'),
+                // Display a message when there are no topics
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                    Icon(Icons.lightbulb_outline, size: 48, color: Colors.grey),
+                    SizedBox(height: 10),
+                    Text(
+                    'No topics yet',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
+                    Text('Tap the + button to add your first topic.'),
+                ],
+              ),
             )
           : ListView.builder(
               itemCount: topicProvider.topics.length,
               itemBuilder: (context, index) {
                 final topic = topicProvider.topics[index];
 
-                return ListTile(
-                  // Topic title with optional strikethrough if marked as done
-                  title: Text(
-                    topic.title,
-                    style: TextStyle(
-                      decoration: topic.isDone
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                    ),
-                  ),
-
-                  // Short description shown as subtitle
-                  subtitle: Text(topic.description),
-
-                  // Checkbox to mark topic as done or not
-                  leading: Checkbox(
-                    value: topic.isDone,
-                    onChanged: (val) {
-                      // Update the topic with the new isDone status
-                      topicProvider.updateTopic(
-                        Topic(
-                          id: topic.id,
-                          title: topic.title,
-                          description: topic.description,
-                          isDone: val ?? false,
-                          notes: topic.notes,
+                return Card(
+                    // Add some padding around each topic card
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        title: Text(
+                        topic.title,
+                        style: TextStyle(
+                            decoration: topic.isDone ? TextDecoration.lineThrough : null,
                         ),
-                      );
-                    },
-                  ),
-
-                  // Row of edit/delete icons
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {
-                          // Navigate to the AddTopic screen with the topic to edit
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddTopicScreen(topicToEdit: topic), 
+                        ),
+                        subtitle: Text(topic.description),
+                        trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                            IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddTopicScreen(topicToEdit: topic),
+                                ),
+                                );
+                            },
                             ),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () async {
-                            final confirm = await showDialog<bool>(
+                            IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                                final confirm = await showDialog<bool>(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                title: const Text('Delete Topic'),
-                                content: const Text('Are you sure you want to delete this topic?'),
-                                actions: [
+                                    title: const Text('Delete Topic'),
+                                    content: const Text('Are you sure you want to delete this topic?'),
+                                    actions: [
                                     TextButton(
-                                    onPressed: () => Navigator.pop(context, false),
-                                    child: const Text('Cancel'),
+                                        onPressed: () => Navigator.pop(context, false),
+                                        child: const Text('Cancel'),
                                     ),
                                     TextButton(
-                                    onPressed: () => Navigator.pop(context, true),
-                                    child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                        onPressed: () => Navigator.pop(context, true),
+                                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
                                     ),
-                                ],
+                                    ],
                                 ),
-                            );
+                                );
 
-                            if (confirm == true) {
+                                if (confirm == true) {
                                 topicProvider.deleteTopic(topic.id!);
-                            }
-                        },
-                      ),
-                    ],
-                  ),
-
-                  // Navigate to topic detail screen on tap
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                        builder: (context) => TopicDetailScreen(topic: topic),
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Topic deleted')),
+                                );
+                                }
+                            },
+                            ),
+                        ],
                         ),
-                    );
-                  },
+                        leading: Checkbox(
+                        value: topic.isDone,
+                        onChanged: (val) {
+                            topicProvider.updateTopic(
+                            Topic(
+                                id: topic.id,
+                                title: topic.title,
+                                description: topic.description,
+                                isDone: val ?? false,
+                                notes: topic.notes,
+                            ),
+                            );
+                        },
+                        ),
+                        onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => TopicDetailScreen(topic: topic),
+                            ),
+                        );
+                      },
+                    ),
                 );
               },
             ),
