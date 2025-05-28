@@ -116,10 +116,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 ),
                                 IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                    topicProvider.deleteTopic(topic.id!);
-                                },
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                        showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                            title: const Text('Delete Topic'),
+                                            content: const Text('Are you sure you want to delete this topic?'),
+                                            actions: [
+                                            TextButton(
+                                                onPressed: () => Navigator.pop(context), // Cancel
+                                                child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                                onPressed: () {
+                                                // Perform deletion
+                                                topicProvider.deleteTopic(topic.id!);
+
+                                                // Show feedback and close the dialog
+                                                Navigator.pop(context);
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(content: Text('Topic deleted')),
+                                                );
+                                                },
+                                                child: const Text('Delete'),
+                                            ),
+                                            ],
+                                        ),
+                                        );
+                                    },
                                 ),
                             ],
                             ),

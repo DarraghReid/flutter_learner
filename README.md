@@ -61,6 +61,12 @@ After confirming deletion, editing, and adding a topic, a snackbar message appea
 
 ![Deleted Snackbar](assets/deleted_snackbar.png)
 
+---
+
+### ✅ Error Handling
+Clear messages are presented to the user if they have made errors in filling in the form
+
+![Deleted Snackbar](assets/error_handling.png)
 
 ---
 

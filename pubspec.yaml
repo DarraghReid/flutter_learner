@@ -70,6 +70,7 @@ flutter:
       - assets/edit_topic.png
       - assets/home_screen.png
       - assets/topic_details.png
+      - assets/error_handling.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
