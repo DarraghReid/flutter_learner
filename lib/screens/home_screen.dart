@@ -44,112 +44,103 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: topicProvider.topics.isEmpty
-          ? const Center(
-                // Display a message when there are no topics
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                    Icon(Icons.lightbulb_outline, size: 48, color: Colors.grey),
-                    SizedBox(height: 10),
-                    Text(
-                    'No topics yet',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text('Tap the + button to add your first topic.'),
-                ],
-              ),
-            )
-          : ListView.builder(
-              itemCount: topicProvider.topics.length,
-              itemBuilder: (context, index) {
-                final topic = topicProvider.topics[index];
-
-                return Card(
-                    // Add some padding around each topic card
-                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        title: Text(
-                        topic.title,
-                        style: TextStyle(
-                            decoration: topic.isDone ? TextDecoration.lineThrough : null,
-                        ),
-                        ),
-                        subtitle: Text(topic.description),
-                        trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                            IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                                Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddTopicScreen(topicToEdit: topic),
-                                ),
-                                );
-                            },
-                            ),
-                            IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () async {
-                                final confirm = await showDialog<bool>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                    title: const Text('Delete Topic'),
-                                    content: const Text('Are you sure you want to delete this topic?'),
-                                    actions: [
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context, false),
-                                        child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context, true),
-                                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                    ),
-                                    ],
-                                ),
-                                );
-
-                                if (confirm == true) {
-                                topicProvider.deleteTopic(topic.id!);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Topic deleted')),
-                                );
-                                }
-                            },
-                            ),
-                        ],
-                        ),
-                        leading: Checkbox(
-                        value: topic.isDone,
-                        onChanged: (val) {
-                            topicProvider.updateTopic(
-                            Topic(
-                                id: topic.id,
-                                title: topic.title,
-                                description: topic.description,
-                                isDone: val ?? false,
-                                notes: topic.notes,
-                            ),
-                            );
-                        },
-                        ),
-                        onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (context) => TopicDetailScreen(topic: topic),
-                            ),
-                        );
-                      },
-                    ),
-                );
-              },
+        ? const Center(child: Text('No topics yet. Add one!'))
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            // Progress indicator
+            Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                'Progress: ${topicProvider.topics.where((t) => t.isDone).length} of ${topicProvider.topics.length} topics completed',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
             ),
 
-      // Floating action button to add a new topic
+            // Expanded list view of sorted topics
+            Expanded(
+                child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: ListView.builder(
+                    itemCount: topicProvider.topics.length,
+                    itemBuilder: (context, index) {
+                    // Sort topics: incomplete first
+                    final sortedTopics = [...topicProvider.topics]
+                        ..sort((a, b) => (a.isDone ? 1 : 0) - (b.isDone ? 1 : 0));
+
+                    final topic = sortedTopics[index];
+
+                    return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                            title: Text(
+                            topic.title,
+                            style: TextStyle(
+                                decoration: topic.isDone
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                            ),
+                            ),
+                            subtitle: Text(topic.description),
+                            leading: Checkbox(
+                            value: topic.isDone,
+                            onChanged: (val) {
+                                topicProvider.updateTopic(
+                                Topic(
+                                    id: topic.id,
+                                    title: topic.title,
+                                    description: topic.description,
+                                    isDone: val ?? false,
+                                    notes: topic.notes,
+                                ),
+                                );
+                            },
+                            ),
+                            trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                                IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddTopicScreen(topicToEdit: topic),
+                                    ),
+                                    );
+                                },
+                                ),
+                                IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                    topicProvider.deleteTopic(topic.id!);
+                                },
+                                ),
+                            ],
+                            ),
+                            onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                builder: (_) => TopicDetailScreen(topic: topic),
+                                ),
+                            );
+                            },
+                        ),
+                        ),
+                    );
+                    },
+                ),
+                ),
+            ),
+            ],
+        ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to the AddTopic screen

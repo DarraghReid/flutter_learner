@@ -36,4 +36,23 @@ class TopicProvider with ChangeNotifier {
     await _dbHelper.deleteTopic(id);
     await loadTopics();
   }
+
+  /// Preloads sample topics into the database if the list is empty.
+  Future<void> preloadTopicsIfNeeded() async {
+    if (_topics.isEmpty) {
+        final sampleTopics = [
+        Topic(title: 'Widgets', description: 'Building blocks of Flutter UI'),
+        Topic(title: 'State Management', description: 'Manage app state effectively'),
+        Topic(title: 'Navigation', description: 'Navigate between screens'),
+        Topic(title: 'SQLite', description: 'Store data locally using sqflite'),
+        Topic(title: 'Provider', description: 'Recommended state management tool'),
+        ];
+
+        for (final topic in sampleTopics) {
+        await DatabaseHelper().insertTopic(topic);
+        }
+
+        await loadTopics(); // Reload after inserting
+    }
+  }
 }

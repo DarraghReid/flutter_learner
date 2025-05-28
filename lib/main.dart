@@ -4,10 +4,18 @@ import 'providers/topic_provider.dart';
 import 'screens/home_screen.dart';
 
 
-void main() {
+void main() async {
+  // Ensure that Flutter bindings are initialized before running the app.
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Load topics from the database and preload sample topics if needed.
+  final topicProvider = TopicProvider();
+  await topicProvider.loadTopics();
+  await topicProvider.preloadTopicsIfNeeded();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => TopicProvider()..loadTopics(),
+    ChangeNotifierProvider.value(
+      value: topicProvider,
       child: const FlutterLearnerApp(),
     ),
   );

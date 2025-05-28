@@ -29,6 +29,8 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath(); // Get the default database path
     final path = join(dbPath, 'topics.db');  // Set the database file name
 
+    print('📦 Database path: $path'); 
+
     return await openDatabase(
       path,
       version: 1,
