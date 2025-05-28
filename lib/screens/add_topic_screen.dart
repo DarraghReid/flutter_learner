@@ -70,7 +70,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Topic'),
+        title: Text(widget.topicToEdit != null ? 'Edit Topic' : 'Add New Topic'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

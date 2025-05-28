@@ -19,7 +19,48 @@
 
 ## 📸 Screenshots
 
-*(You can add screenshots here after taking emulator/device screen captures)*
+Here are some screenshots demonstrating the features of **Flutter Learner**:
+
+### 🏠 Home Screen
+Displays a list of topics the user is learning. Users can mark topics as completed, edit, or delete them.
+
+![Home Screen](assets/home_screen.png)
+
+---
+
+### ➕ Add Topic
+Users can add a new topic, including a title, description, and optional notes.
+
+![Add Topic](assets/add_topic.png)
+
+---
+
+### ✏️ Edit Topic
+The same form is reused for editing. The UI updates to reflect that the user is modifying an existing topic.
+
+![Edit Topic](assets/edit_topic.png)
+
+---
+
+### 📋 Topic Details
+Users can tap on a topic to view its full details, including long notes and completion status.
+
+![Topic Details](assets/topic_details.png)
+
+---
+
+### ❗ Delete Confirmation Prompt
+When attempting to delete a topic, the app prompts for confirmation to prevent accidental deletions.
+
+![Delete Prompt](assets/delete_prompt.png)
+
+---
+
+### ✅ Deletion Snackbar Feedback
+After confirming deletion, a snackbar message appears confirming the topic was removed successfully.
+
+![Deleted Snackbar](assets/deleted_snackbar.png)
+
 
 ---
 
