@@ -3,13 +3,33 @@ import 'package:provider/provider.dart';
 
 import '../providers/topic_provider.dart';
 import '../models/topic.dart';
+import 'add_topic_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+/// The main screen that displays the list of Flutter topics
+/// and allows users to add, edit, or delete topics.
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _initialized = false;
+
+  /// Load topics from the database the first time this screen is shown.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      Provider.of<TopicProvider>(context, listen: false).loadTopics();
+      _initialized = true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Access TopicProvider (state) using Provider
+    // Access the current state of topics using Provider
     final topicProvider = Provider.of<TopicProvider>(context);
 
     return Scaffold(
@@ -17,41 +37,33 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Flutter Learner'),
       ),
       body: topicProvider.topics.isEmpty
-          ? const Center(child: Text('No topics yet. Add one!'))
+          ? const Center(
+              child: Text('No topics yet. Add one!'),
+            )
           : ListView.builder(
               itemCount: topicProvider.topics.length,
               itemBuilder: (context, index) {
                 final topic = topicProvider.topics[index];
 
                 return ListTile(
+                  // Topic title with optional strikethrough if marked as done
                   title: Text(
                     topic.title,
                     style: TextStyle(
-                      decoration: topic.isDone ? TextDecoration.lineThrough : null,
+                      decoration: topic.isDone
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
                     ),
                   ),
+
+                  // Short description shown as subtitle
                   subtitle: Text(topic.description),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {
-                          // TODO: Navigate to edit screen
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          topicProvider.deleteTopic(topic.id!);
-                        },
-                      ),
-                    ],
-                  ),
+
+                  // Checkbox to mark topic as done or not
                   leading: Checkbox(
                     value: topic.isDone,
                     onChanged: (val) {
-                      // Update topic with new isDone value
+                      // Update the topic with the new isDone status
                       topicProvider.updateTopic(
                         Topic(
                           id: topic.id,
@@ -63,15 +75,52 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
+
+                  // Row of edit/delete icons
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {
+                          // Placeholder for future edit screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const AddTopicScreen(), // will eventually change to Edit screen
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          // Delete this topic from the list
+                          topicProvider.deleteTopic(topic.id!);
+                        },
+                      ),
+                    ],
+                  ),
+
+                  // Tap to view more details (to be implemented later)
                   onTap: () {
-                    // TODO: View or edit topic details
+                    // TODO: View topic details or edit
                   },
                 );
               },
             ),
+
+      // Floating action button to add a new topic
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to add screen
+          // Navigate to the AddTopic screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddTopicScreen(),
+            ),
+          );
         },
         child: const Icon(Icons.add),
       ),
