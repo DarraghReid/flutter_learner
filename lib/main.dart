@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'providers/topic_provider.dart';
 
 void main() {
-  runApp(const FlutterLearnerApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => TopicProvider()..loadTopics(),
+      child: const FlutterLearnerApp(),
+    ),
+  );
 }
 
 class FlutterLearnerApp extends StatelessWidget {
