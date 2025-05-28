@@ -26,6 +26,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
       final newTopic = Topic(
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
+        isDone: false,
         notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       );
 

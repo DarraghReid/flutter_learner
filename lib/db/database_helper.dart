@@ -52,6 +52,7 @@ class DatabaseHelper {
   /// Inserts a new topic into the database.
   Future<int> insertTopic(Topic topic) async {
     final db = await database;
+    print("Inserting topic: ${topic.toMap()}"); // ← Add this
     return await db.insert('topics', topic.toMap());
   }
 
