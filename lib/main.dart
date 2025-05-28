@@ -21,10 +21,21 @@ class FlutterLearnerApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Learner',
       theme: ThemeData(
+        primaryColor: const Color(0xFF02569B), // Flutter Blue
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF02569B),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF02569B),
+          foregroundColor: Colors.white,
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFF02569B),
+        ),
+        scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
       ),
-      home: const HomeScreen(), // Ensure you have a HomeScreen widget defined
+      home: const HomeScreen(),
     );
   }
 }

@@ -35,7 +35,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Learner'),
+        title: Row(
+            children: [
+                Image.asset('assets/flutter_logo.png', height: 32),
+                const SizedBox(width: 10),
+                const Text('Flutter Learner'),
+            ],
+        ),
       ),
       body: topicProvider.topics.isEmpty
           ? const Center(
